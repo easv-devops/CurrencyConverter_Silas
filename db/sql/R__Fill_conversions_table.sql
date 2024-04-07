@@ -1,5 +1,5 @@
 DELETE FROM Conversions;
-INSERT INTO Conversions (`date`, source, target, value, result) VALUES 
+INSERT INTO Conversions (`date`, source, target, `value`, result) VALUES 
 ('2019-01-01', 'USD', 'EUR', 1, 0.88),
 ('2019-02-01', 'USD', 'GBP', 1, 0.78),
 ('2019-03-01', 'USD', 'JPY', 1, 110.0),
