@@ -1,6 +1,6 @@
 services:
   converter-frontend:
-    image: kerosilas/cd-weather-web:staging
+    image: kerosilas/currencyconverter-web:staging
     ports:
       - "5001:8080"
     depends_on: 
@@ -9,7 +9,7 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
   
   converter-api:
-    image: kerosilas/cd-weather-api:staging
+    image: kerosilas/currencyconverter-api:staging
     ports:
       - "5002:8080"
     depends_on:
