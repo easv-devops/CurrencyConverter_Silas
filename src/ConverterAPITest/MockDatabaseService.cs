@@ -8,9 +8,8 @@ public class MockDatabaseService : IDatabaseService
     public CurrencyConversion[] GetConversions()
     {
         return new CurrencyConversion[]{
-            new (DateTime.Now, "USD", "EUR", 100, 88.5m),
-            new (DateTime.Now, "EUR", "USD", 100, 112.9m),
-            new (DateTime.Now, "USD", "JPY", 100, 11000m)
+            new CurrencyConversion(DateTime.Now, "USD", "EUR", 100, 85.0m),
+            new CurrencyConversion(DateTime.Now, "EUR", "USD", 100, 118.0m)
         };
     }
 
