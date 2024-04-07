@@ -35,6 +35,8 @@ public class HomeController : Controller
         var currencyConverter = new CurrencyConverter();
         var convertedValue = currencyConverter.ConvertCurrency(value, source, target);
         
+        Console.WriteLine($"Converted {value} {source} to {convertedValue} {target}");
+        
         var httpClient = new HttpClient();
         var conversion = new CurrencyConversion(DateTime.Now, source, target, value, convertedValue);
         var content = new StringContent(JsonSerializer.Serialize(conversion), Encoding.UTF8, "application/json");
@@ -45,7 +47,7 @@ public class HomeController : Controller
             // Save the result to the database or do something else with it
         }
         
-        return View("Index");
+        return View("Index", convertedValue);
     }
 
     public IActionResult Privacy()
