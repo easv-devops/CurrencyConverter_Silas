@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using ConverterFrontend.Models;
@@ -13,13 +15,37 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
+    
+    public IActionResult Index()
+    {
+        return View();
+    }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> _History()
     {
         var httpClient = new HttpClient();
         var result = await httpClient.GetAsync("http://converter-api:8080/currencyconverter");
         var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
         return View(conversions);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> ConvertCurrency(string source, string target, int value)
+    {
+        var currencyConverter = new CurrencyConverter();
+        var convertedValue = currencyConverter.ConvertCurrency(value, source, target);
+        
+        var httpClient = new HttpClient();
+        var conversion = new CurrencyConversion(DateTime.Now, source, target, value, convertedValue);
+        var content = new StringContent(JsonSerializer.Serialize(conversion), Encoding.UTF8, "application/json");
+        var response = await httpClient.PostAsync("http://converter-api:8080/currencyconverter", content);
+        if (response.IsSuccessStatusCode)
+        {
+            var responseResult = await response.Content.ReadFromJsonAsync<CurrencyConversion>();
+            // Save the result to the database or do something else with it
+        }
+        
+        return View("Index", convertedValue);
     }
 
     public IActionResult Privacy()
