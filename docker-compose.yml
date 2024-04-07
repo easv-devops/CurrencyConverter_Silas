@@ -34,7 +34,7 @@ services:
     image: flyway/flyway
     volumes:
       - ./db/sql:/flyway/sql
-    command: migrate -url=jdbc:mariadb://localhost:3306/conversions -user=myuser -password=mypassword
+    command: migrate -url=jdbc:mariadb://mariadb:3306/conversions -user=myuser -password=mypassword
     depends_on:
       - mariadb
         
