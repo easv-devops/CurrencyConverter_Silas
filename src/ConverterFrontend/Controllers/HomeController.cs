@@ -45,7 +45,7 @@ public class HomeController : Controller
             // Save the result to the database or do something else with it
         }
         
-        return View("Index", convertedValue);
+        return View("Index");
     }
 
     public IActionResult Privacy()
