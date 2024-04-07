@@ -1,0 +1,90 @@
+kind: pipeline
+type: docker
+name: integration
+ 
+steps:
+  - name: code-analysis
+    image: boulundeasv/dotnet-sdk-with-java
+    environment:
+      SONARSECRET:
+        from_secret: SonarQubeSecret
+    commands:
+      - exit 0
+      - dotnet sonarscanner begin
+          /k:"easv-devops_CDWeatherExample_Silas_AY5Sv4QqEVvRW2O60EXq"
+          /d:sonar.host.url="http://sonar.setgo.dk:9000"  
+          /d:sonar.token="$SONARSECRET"
+          /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          /d:sonar.qualitygate.wait=true
+      - dotnet build --no-incremental
+      - dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+      - dotnet sonarscanner end /d:sonar.token="$SONARSECRET"
+
+---
+
+kind: pipeline
+type: docker
+name: deliver
+depends_on:
+  - integration
+
+steps:
+  - name: publish api
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: DockerUsername
+      password:
+        from_secret: DockerPassword
+      context: src
+      dockerfile: src/WeatherAPI/Dockerfile
+      repo: kerosilas/cd-weather-api
+      tags: 
+        - staging
+
+  - name: publish web
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: DockerUsername
+      password:
+        from_secret: DockerPassword
+      context: src
+      dockerfile: src/WeatherFrontend/Dockerfile
+      repo: kerosilas/cd-weather-web
+      tags: 
+        - staging
+
+  - name: trigger update
+    image: curlimages/curl
+    commands:
+      - "curl --fail -X GET 'http://167.86.105.61:8080/v1/update' -H 'Authorization: Bearer mytoken'" # Must match the token defined in docker-compose.yml
+      - sleep 10
+    depends_on:
+      - publish api
+      - publish web
+
+  - name: update database
+    image: flyway/flyway
+    commands:
+      - flyway migrate
+          -url=jdbc:mariadb://167.86.105.61:3306/forecasts
+          -user=myuser
+          -password=mypassword
+          -locations=filesystem:./db/sql
+    depends_on:
+      - trigger update
+
+  - name: performance tests
+    image: grafana/k6
+    commands:
+      - k6 run test/performance/spike.js
+    depends_on:
+      - update database
+
+  - name: end-to-end tests
+    image: testcafe/testcafe
+    commands:
+      - testcafe chromium:headless test/e2e/count-conversions.js
+    depends_on:
+      - update database

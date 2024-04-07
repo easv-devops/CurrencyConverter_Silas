@@ -1,0 +1,65 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  weather-api:
+    build:
+      context: "/Users/thomasboulundmenghansen/CombinedCDExample/src"
+      dockerfile: "WeatherAPI/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "/riderDebugger/linux-arm64/dotnet/dotnet"
+    - "/riderDebugger/JetBrains.Debugger.Worker.exe"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "/Users/thomasboulundmenghansen/.nuget/packages"
+      NUGET_FALLBACK_PACKAGES: "/Users/thomasboulundmenghansen/.nuget/packages"
+      RIDER_DEBUGGER_LOG_DIR: "/riderLogs"
+      RESHARPER_LOG_CONF: "/riderLogsConf/backend-log.xml"
+    image: "weatherapi:dev"
+    ports:
+    - "127.0.0.1:57028:57100"
+    - "127.0.0.1:57228:57300"
+    volumes:
+    - "/Users/thomasboulundmenghansen/.nuget/packages:/root/.nuget/fallbackpackages"
+    - "/Users/thomasboulundmenghansen/CombinedCDExample/src/WeatherAPI:/app:rw"
+    - "/Users/thomasboulundmenghansen/CombinedCDExample:/src:rw"
+    - "/Users/thomasboulundmenghansen/.local/share/JetBrains/RiderRemoteDebugger/2023.2.1/LinuxArm64:/riderDebugger"
+    - "/Users/thomasboulundmenghansen/Applications/Rider.app/Contents/bin:/riderLogsConf"
+    - "/Users/thomasboulundmenghansen/Library/Logs/JetBrains/Rider2023.2/DebuggerWorker/JetBrains.Debugger.Worker.2024_3_07_15_44_37:/riderLogs:rw"
+    working_dir: "/app"
+  weather-frontend:
+    build:
+      context: "/Users/thomasboulundmenghansen/CombinedCDExample/src"
+      dockerfile: "WeatherFrontend/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "/riderDebugger/linux-arm64/dotnet/dotnet"
+    - "/riderDebugger/JetBrains.Debugger.Worker.exe"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net8.0/WeatherFrontend.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "/Users/thomasboulundmenghansen/.nuget/packages"
+      NUGET_FALLBACK_PACKAGES: "/Users/thomasboulundmenghansen/.nuget/packages"
+      RIDER_DEBUGGER_LOG_DIR: "/riderLogs"
+      RESHARPER_LOG_CONF: "/riderLogsConf/backend-log.xml"
+    image: "weatherfrontend:dev"
+    ports:
+    - "127.0.0.1:57029:57100"
+    - "127.0.0.1:57229:57300"
+    volumes:
+    - "/Users/thomasboulundmenghansen/.nuget/packages:/root/.nuget/fallbackpackages"
+    - "/Users/thomasboulundmenghansen/CombinedCDExample/src/WeatherFrontend:/app:rw"
+    - "/Users/thomasboulundmenghansen/CombinedCDExample:/src:rw"
+    - "/Users/thomasboulundmenghansen/.local/share/JetBrains/RiderRemoteDebugger/2023.2.1/LinuxArm64:/riderDebugger"
+    - "/Users/thomasboulundmenghansen/Applications/Rider.app/Contents/bin:/riderLogsConf"
+    - "/Users/thomasboulundmenghansen/Library/Logs/JetBrains/Rider2023.2/DebuggerWorker/JetBrains.Debugger.Worker.2024_3_07_15_44_37:/riderLogs:rw"
+    working_dir: "/app"
