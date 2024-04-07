@@ -15,6 +15,6 @@ public class Tests
         var conversions = databaseService.GetConversions();
         
         // Assert
-        Assert.That(conversions.Length, Is.EqualTo(2));
+        Assert.That(conversions, Has.Length.EqualTo(2));
     }
 }
