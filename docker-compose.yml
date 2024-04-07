@@ -29,7 +29,15 @@ services:
       - "3306:3306"
     volumes:
       - mariadb:/var/lib/mysql
-
+        
+  flyway:
+    image: flyway/flyway
+    volumes:
+      - ./db/sql:/flyway/sql
+    command: migrate -url=jdbc:mariadb://localhost:3306/conversions -user=myuser -password=mypassword
+    depends_on:
+      - mariadb
+        
   watchtower:
     image: containrrr/watchtower
     volumes:
