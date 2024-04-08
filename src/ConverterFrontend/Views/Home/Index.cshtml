@@ -5,7 +5,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Currency Converter</h1>
-    <form method="post" asp-controller="Home" asp-action="Index">
+    <form id="convertForm" method="post" asp-controller="Home" asp-action="Index">
         <div class="form-row">
             <div class="form-group">
                 <label for="source">Source</label>
@@ -35,7 +35,7 @@
         <button type="submit" class="btn btn-primary">Convert</button>
     </form>
     <label>Result:</label>
-    <p id="result">@Model.Result</p>
+    <p id="resultLabel">@Model.Result</p>
 </div>
 
 <partial name="_History" model="Model.Conversions"/>

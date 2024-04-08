@@ -40,7 +40,7 @@ public class HomeController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> Index(string source, string target, int value)
+    public async Task<IActionResult> ConvertCurrency(string source, string target, int value)
     {
         var currencyConverter = new CurrencyConverter();
         var convertedValue = currencyConverter.ConvertCurrency(value, source, target);
@@ -56,7 +56,7 @@ public class HomeController : Controller
         }
         
         TempData["Result"] = convertedValue;
-        return RedirectToAction("Index");
+        return Json(new { source = source, target = target, value = value, result = convertedValue });
     }
 
     public IActionResult Privacy()
