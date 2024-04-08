@@ -42,20 +42,15 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> ConvertCurrency(string source, string target, int value)
     {
-        var currencyConverter = new CurrencyConverter();
-        var convertedValue = currencyConverter.ConvertCurrency(value, source, target);
-
-        var httpClient = new HttpClient();
+        var convertedValue = new CurrencyConverter().ConvertCurrency(value, source, target);
         var conversion = new CurrencyConversion(DateTime.Now, source, target, value, convertedValue);
-        var json = JsonSerializer.Serialize(conversion);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        using var httpClient = new HttpClient();
+        var content = new StringContent(JsonSerializer.Serialize(conversion), Encoding.UTF8, "application/json");
         await httpClient.PostAsync("http://converter-api:8080/currencyconverter", content);
-        
-        return View("Index", new IndexViewModel
-        {
-            Conversions = await httpClient.GetFromJsonAsync<CurrencyConversion[]>("http://converter-api:8080/currencyconverter"),
-            Conversion = new CurrencyConversion(DateTime.Now, source, target, value, convertedValue)
-        });
+
+        var conversions = await httpClient.GetFromJsonAsync<CurrencyConversion[]>("http://converter-api:8080/currencyconverter");
+        return View("Index", new IndexViewModel { Conversions = conversions, Conversion = conversion });
     }
 
     public IActionResult Privacy()
