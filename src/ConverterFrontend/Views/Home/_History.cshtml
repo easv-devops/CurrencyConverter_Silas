@@ -14,7 +14,7 @@
     <tbody>
     @foreach(var conversion in Model) {
         <tr>
-            <td>@conversion.Date.ToString("MMMM d yyyy")</td>
+            <td>@conversion.Date.ToString("dd/MM/yyyy HH:mm")</td>
             <td>@conversion.Source</td>
             <td>@conversion.Target</td>
             <td>@conversion.Value</td>

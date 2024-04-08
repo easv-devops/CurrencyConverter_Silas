@@ -24,7 +24,7 @@ public class HomeController : Controller
         var model = new IndexViewModel
         {
             Conversions = conversions,
-            Result = 0
+            Conversion = new CurrencyConversion(DateTime.Now, "USD", "USD", 0, 0)
         };
         
         
@@ -53,8 +53,8 @@ public class HomeController : Controller
         
         return View("Index", new IndexViewModel
         {
-            Conversions = new CurrencyConversion[] { conversion },
-            Result = convertedValue
+            Conversions = await httpClient.GetFromJsonAsync<CurrencyConversion[]>("http://converter-api:8080/currencyconverter"),
+            Conversion = new CurrencyConversion(DateTime.Now, source, target, value, convertedValue)
         });
     }
 

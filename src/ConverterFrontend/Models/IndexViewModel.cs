@@ -4,6 +4,6 @@ namespace ConverterFrontend.Models;
 
 public class IndexViewModel
 {
-    public decimal Result { get; set; }
+    public CurrencyConversion Conversion { get; set; }
     public CurrencyConversion[] Conversions { get; set; }
 }

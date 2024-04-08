@@ -10,7 +10,7 @@ public class DatabaseService : IDatabaseService
     public CurrencyConversion[] GetConversions()
     {
         using var connection = GetConnection();
-        return connection.Query<CurrencyConversion>("SELECT `date`, source, target, `value`, result FROM Conversions ORDER BY `date`").ToArray();
+        return connection.Query<CurrencyConversion>("SELECT `date`, source, target, `value`, result FROM Conversions ORDER BY `date` DESC").ToArray();
     }
 
     public void SaveConversion(CurrencyConversion conversion)

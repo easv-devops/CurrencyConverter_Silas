@@ -31,11 +31,11 @@
                 <label for="value">Value</label>
                 <input id="value" name="value" class="form-control"/>
             </div>
+            <button type="submit" class="btn btn-primary">Convert</button>
         </div>
-        <button type="submit" class="btn btn-primary">Convert</button>
     </form>
-    <label>Result:</label>
-    <p id="result">@Model.Result</p>
+    <br/>
+    <p id="result">@Model.Conversion.Value @Model.Conversion.Source is @Model.Conversion.Result @Model.Conversion.Target</p>
 </div>
 
 <partial name="_History" model="Model.Conversions"/>
