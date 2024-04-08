@@ -18,13 +18,13 @@ public class HomeController : Controller
     
     public async Task<IActionResult> Index()
     {
-        var httpClient = new HttpClient();
+        using var httpClient = new HttpClient();
         var result = await httpClient.GetAsync("http://converter-api:8080/currencyconverter");
         var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
         var model = new IndexViewModel
         {
             Conversions = conversions,
-            Conversion = new CurrencyConversion(DateTime.Now, "USD", "USD", 0, 0)
+            Conversion = null
         };
         
         

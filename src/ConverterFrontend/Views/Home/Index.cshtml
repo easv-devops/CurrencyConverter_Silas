@@ -35,7 +35,10 @@
         </div>
     </form>
     <br/>
-    <p id="result">@Model.Conversion.Value @Model.Conversion.Source is @Model.Conversion.Result @Model.Conversion.Target</p>
+    @if (Model.Conversion != null)
+    {
+        <p id="result">@Model.Conversion.Value @Model.Conversion.Source is @Model.Conversion.Result @Model.Conversion.Target</p>
+    }
 </div>
 
 <partial name="_History" model="Model.Conversions"/>
