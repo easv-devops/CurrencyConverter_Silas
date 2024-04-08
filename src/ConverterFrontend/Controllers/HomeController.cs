@@ -47,14 +47,15 @@ public class HomeController : Controller
 
         var httpClient = new HttpClient();
         var conversion = new CurrencyConversion(DateTime.Now, source, target, value, convertedValue);
-        var content = new StringContent(JsonSerializer.Serialize(conversion), Encoding.UTF8, "application/json");
-        var response = await httpClient.PostAsync("http://converter-api:8080/currencyconverter", content);
-        if (response.IsSuccessStatusCode)
-        {
-            var responseResult = await response.Content.ReadFromJsonAsync<CurrencyConversion>();
-        }
+        var json = JsonSerializer.Serialize(conversion);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        await httpClient.PostAsync("http://converter-api:8080/currencyconverter", content);
         
-        return RedirectToAction("Index");
+        return View("Index", new IndexViewModel
+        {
+            Conversions = new CurrencyConversion[] { conversion },
+            Result = convertedValue
+        });
     }
 
     public IActionResult Privacy()
