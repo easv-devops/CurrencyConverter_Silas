@@ -24,7 +24,7 @@ public class HomeController : Controller
         var model = new IndexViewModel
         {
             Conversions = conversions,
-            Result = TempData.ContainsKey("Result") ? (decimal) TempData["Result"] : 0
+            Result = 0
         };
         
         
@@ -52,11 +52,9 @@ public class HomeController : Controller
         if (response.IsSuccessStatusCode)
         {
             var responseResult = await response.Content.ReadFromJsonAsync<CurrencyConversion>();
-            // Save the result to the database or do something else with it
         }
         
-        TempData["Result"] = convertedValue;
-        return Json(new { date = new DateTime(), source = source, target = target, value = value, result = convertedValue });
+        return RedirectToAction("Index");
     }
 
     public IActionResult Privacy()
