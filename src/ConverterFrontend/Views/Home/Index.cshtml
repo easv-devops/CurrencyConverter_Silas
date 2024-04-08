@@ -39,31 +39,3 @@
 </div>
 
 <partial name="_History" model="Model.Conversions"/>
-
-<script>
-$(document).ready(function() {
-    $("form").on("submit", function(event) {
-        event.preventDefault();
-
-        $.ajax({
-            url: "/Home/ConvertCurrency",
-            type: "POST",
-            data: $(this).serialize(),
-            success: function(data) {
-                // Update the result on the page
-                $("#result").text(data.result);
-            
-                // Create an HTML string for the history
-                var historyHtml = "";
-                for (var i = 0; i < data.history.length; i++) {
-                    var conversion = data.history[i];
-                    historyHtml += "<p>" + conversion.Date + ": Converted " + conversion.Value + " " + conversion.Source + " to " + conversion.Result + " " + conversion.Target + "</p>";
-                }
-            
-                // Update the history on the page
-                $("#history").html(historyHtml);
-            }
-        });
-    });
-});
-</script>

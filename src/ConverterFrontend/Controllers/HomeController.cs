@@ -24,7 +24,7 @@ public class HomeController : Controller
         var model = new IndexViewModel
         {
             Conversions = conversions,
-            Result = 0
+            Result = TempData.ContainsKey("Result") ? (decimal) TempData["Result"] : 0
         };
         
         
@@ -54,20 +54,9 @@ public class HomeController : Controller
             var responseResult = await response.Content.ReadFromJsonAsync<CurrencyConversion>();
             // Save the result to the database or do something else with it
         }
-
-        // Get the history of conversions
-        var historyResult = await httpClient.GetAsync("http://converter-api:8080/currencyconverter");
-        var conversions = await historyResult.Content.ReadFromJsonAsync<CurrencyConversion[]>();
-
-        // Create a new instance of IndexViewModel and set the Result property
-        var model = new IndexViewModel
-        {
-            Result = convertedValue,
-            Conversions = conversions
-        };
-
-        // Pass the model to the View
-        return Json(new { result = model.Result, history = model.Conversions });
+        
+        TempData["Result"] = convertedValue;
+        return RedirectToAction("Index");
     }
 
     public IActionResult Privacy()
