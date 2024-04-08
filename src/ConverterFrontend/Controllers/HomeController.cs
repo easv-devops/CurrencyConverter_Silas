@@ -16,9 +16,19 @@ public class HomeController : Controller
         _logger = logger;
     }
     
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var httpClient = new HttpClient();
+        var result = await httpClient.GetAsync("http://converter-api:8080/currencyconverter");
+        var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
+        var model = new IndexViewModel
+        {
+            Conversions = conversions,
+            Result = 0
+        };
+        
+        
+        return View(model);
     }
 
     public async Task<IActionResult> _History()
@@ -34,9 +44,7 @@ public class HomeController : Controller
     {
         var currencyConverter = new CurrencyConverter();
         var convertedValue = currencyConverter.ConvertCurrency(value, source, target);
-        
-        Console.WriteLine($"Converted {value} {source} to {convertedValue} {target}");
-        
+
         var httpClient = new HttpClient();
         var conversion = new CurrencyConversion(DateTime.Now, source, target, value, convertedValue);
         var content = new StringContent(JsonSerializer.Serialize(conversion), Encoding.UTF8, "application/json");
@@ -46,8 +54,20 @@ public class HomeController : Controller
             var responseResult = await response.Content.ReadFromJsonAsync<CurrencyConversion>();
             // Save the result to the database or do something else with it
         }
-        
-        return View("Index", convertedValue);
+
+        // Get the history of conversions
+        var historyResult = await httpClient.GetAsync("http://converter-api:8080/currencyconverter");
+        var conversions = await historyResult.Content.ReadFromJsonAsync<CurrencyConversion[]>();
+
+        // Create a new instance of IndexViewModel and set the Result property
+        var model = new IndexViewModel
+        {
+            Result = convertedValue,
+            Conversions = conversions
+        };
+
+        // Pass the model to the View
+        return View("Index", model);
     }
 
     public IActionResult Privacy()

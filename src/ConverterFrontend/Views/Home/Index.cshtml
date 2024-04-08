@@ -1,4 +1,4 @@
-﻿@model decimal;
+﻿@model IndexViewModel;
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -43,7 +43,7 @@
         <button type="submit" class="btn btn-primary">Convert</button>
     </form>
     <label>Result:</label>
-    <p id="result">@Model</p>
+    <p id="result">@Model.Result</p>
 </div>
 
-<partial name="_History"/>
+<partial name="_History" model="Model.Conversions"/>
