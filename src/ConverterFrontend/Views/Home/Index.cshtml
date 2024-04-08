@@ -6,29 +6,31 @@
 <div class="text-center">
     <h1 class="display-4">Currency Converter</h1>
     <form method="post" asp-controller="Home" asp-action="ConvertCurrency">
-        <div class="form-group">
-            <label for="source">Source</label>
-            <select id="source" name="source" class="form-control">
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="JPY">JPY</option>
-                <option value="GBP">GBP</option>
-                <option value="AUD">AUD</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="target">Target</label>
-            <select id="target" name="target" class="form-control">
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="JPY">JPY</option>
-                <option value="GBP">GBP</option>
-                <option value="AUD">AUD</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="value">Value</label>
-            <input id="value" name="value" class="form-control"/>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="source">Source</label>
+                <select id="source" name="source" class="form-control">
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="JPY">JPY</option>
+                    <option value="GBP">GBP</option>
+                    <option value="AUD">AUD</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="target">Target</label>
+                <select id="target" name="target" class="form-control">
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="JPY">JPY</option>
+                    <option value="GBP">GBP</option>
+                    <option value="AUD">AUD</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="value">Value</label>
+                <input id="value" name="value" class="form-control"/>
+            </div>
         </div>
         <button type="submit" class="btn btn-primary">Convert</button>
     </form>
@@ -48,10 +50,18 @@ $(document).ready(function() {
             type: "POST",
             data: $(this).serialize(),
             success: function(data) {
-                // Update the result and history on the page
+                // Update the result on the page
                 $("#result").text(data.result);
-                // Assuming you have a div with id "history" to display the history
-                $("#history").html(data.history);
+            
+                // Create an HTML string for the history
+                var historyHtml = "";
+                for (var i = 0; i < data.history.length; i++) {
+                    var conversion = data.history[i];
+                    historyHtml += "<p>" + conversion.Date + ": Converted " + conversion.Value + " " + conversion.Source + " to " + conversion.Result + " " + conversion.Target + "</p>";
+                }
+            
+                // Update the history on the page
+                $("#history").html(historyHtml);
             }
         });
     });

@@ -67,7 +67,7 @@ public class HomeController : Controller
         };
 
         // Pass the model to the View
-        return View("Index", model);
+        return Json(new { result = model.Result, history = model.Conversions });
     }
 
     public IActionResult Privacy()
