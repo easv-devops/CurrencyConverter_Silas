@@ -19,7 +19,7 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         using var httpClient = new HttpClient();
-        var result = await httpClient.GetAsync("https://converter-api:8080/currencyconverter");
+        var result = await httpClient.GetAsync("http://converter-api:8080/currencyconverter");
         var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
         var model = new IndexViewModel
         {
@@ -34,7 +34,7 @@ public class HomeController : Controller
     public async Task<IActionResult> _History()
     {
         var httpClient = new HttpClient();
-        var result = await httpClient.GetAsync("https://converter-api:8080/currencyconverter");
+        var result = await httpClient.GetAsync("http://converter-api:8080/currencyconverter");
         var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
         return View(conversions);
     }
@@ -47,7 +47,7 @@ public class HomeController : Controller
 
         using var httpClient = new HttpClient();
         var content = new StringContent(JsonSerializer.Serialize(conversion), Encoding.UTF8, "application/json");
-        await httpClient.PostAsync("https://converter-api:8080/currencyconverter", content);
+        await httpClient.PostAsync("http://converter-api:8080/currencyconverter", content);
 
         var conversions = await httpClient.GetFromJsonAsync<CurrencyConversion[]>("http://converter-api:8080/currencyconverter");
         return View("Index", new IndexViewModel { Conversions = conversions, Conversion = conversion });
