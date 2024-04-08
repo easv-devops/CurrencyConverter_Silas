@@ -40,7 +40,7 @@ public class HomeController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> ConvertCurrency(string source, string target, int value)
+    public async Task<IActionResult> Index(string source, string target, int value)
     {
         var currencyConverter = new CurrencyConverter();
         var convertedValue = currencyConverter.ConvertCurrency(value, source, target);
