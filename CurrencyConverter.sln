@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConverterFrontend", "src\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "src\Models\Models.csproj", "{941AC139-7BD2-4D84-BF3F-0FC35B5A8D84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConverterFrontendTest", "ConverterFrontendTest\ConverterFrontendTest.csproj", "{D609F89F-CA2E-4D40-966D-4966F5442CC1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConverterFrontendTest", "src\ConverterFrontendTest\ConverterFrontendTest.csproj", "{74161C85-375D-446E-8BAA-BDA2AF6E1FAD}"
 EndProject
 Global
