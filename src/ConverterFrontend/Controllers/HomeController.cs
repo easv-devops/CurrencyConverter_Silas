@@ -56,7 +56,7 @@ public class HomeController : Controller
         }
         
         TempData["Result"] = convertedValue;
-        return Json(new { source = source, target = target, value = value, result = convertedValue });
+        return Json(new { date = new DateTime(), source = source, target = target, value = value, result = convertedValue });
     }
 
     public IActionResult Privacy()
