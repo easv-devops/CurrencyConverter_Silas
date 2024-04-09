@@ -1,0 +1,19 @@
+services: 
+  converter-frontend:
+    image: kerosilas/currencyconverter-web:prod
+
+  converter-api:
+    image: kerosilas/currencyconverter-api:prod
+
+  featurehub:
+    image: featurehub/party-server:latest
+    restart: always
+    volumes:
+        - featurehub-h2-data:/db
+    ports:
+      - "8085:8085"
+    labels:
+        - "com.centurylinklabs.watchtower.enable=false"
+          
+volumes: 
+    featurehub-h2-data:

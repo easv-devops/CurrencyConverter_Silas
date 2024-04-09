@@ -88,3 +88,58 @@ steps:
       - testcafe chromium:headless test/e2e/count-conversions.js
     depends_on:
       - update database
+
+---
+
+kind: pipeline
+type: docker
+name: deploy
+depends_on:
+  - deliver
+
+steps:
+  - name: release api
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: DockerUsername
+      password:
+        from_secret: DockerPassword
+      context: src
+      dockerfile: src/ConverterAPI/Dockerfile
+      repo: kerosilas/currencyconverter-api
+      tags:
+        - prod
+
+  - name: release web
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: DockerUsername
+      password:
+        from_secret: DockerPassword
+      context: src
+      dockerfile: src/ConverterFrontend/Dockerfile
+      repo: kerosilas/currencyconverter-web
+      tags:
+        - prod
+
+  - name: trigger update
+    image: curlimages/curl
+    commands:
+      - "curl --fail -X GET 'http://167.86.105.64:8080/v1/update' -H 'Authorization: Bearer mytoken'" # Must match the token defined in docker-compose.yml
+      - sleep 10
+    depends_on:
+      - publish api
+      - publish web
+
+  - name: update database
+    image: flyway/flyway
+    commands:
+      - flyway migrate
+        -url=jdbc:mariadb://167.86.105.64:3306/conversions
+        -user=myuser
+        -password=mypassword
+        -locations=filesystem:./db/sql
+    depends_on:
+      - trigger update
