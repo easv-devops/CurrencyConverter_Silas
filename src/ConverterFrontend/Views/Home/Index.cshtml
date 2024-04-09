@@ -1,4 +1,7 @@
-﻿@model IndexViewModel;
+﻿@using FeatureHubSDK
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Models
+@model IndexViewModel;
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -41,4 +44,7 @@
     }
 </div>
 
-<partial name="_History" model="Model.Conversions"/>
+@if(Model.HistoryEnabled)
+{
+    <partial name="_History" model="Model.Conversions"/>
+}

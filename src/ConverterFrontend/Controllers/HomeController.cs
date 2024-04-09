@@ -13,14 +13,21 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly HttpClient _httpClient;
 
-    private EdgeFeatureHubConfig featureHubConfig;
+    private EdgeFeatureHubConfig _featureHubConfig;
+    private bool historyEnabled;
 
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
         _httpClient = new HttpClient();
-        featureHubConfig = new EdgeFeatureHubConfig("http://featurehub:8085/", "7aafd1c5-0ca6-4086-83f4-ecc8c8f44d1e/1BAw3HQvXeLd5O5dhTqaG4lCfmP1ooNgKiTNS71L");
+        _featureHubConfig = new EdgeFeatureHubConfig("http://featurehub:8085/", "7aafd1c5-0ca6-4086-83f4-ecc8c8f44d1e/1BAw3HQvXeLd5O5dhTqaG4lCfmP1ooNgKiTNS71L");
         SetBaseAddress("http://converter-api:8080/");
+        
+        Task.Run(async () =>
+        {
+            var fh = await _featureHubConfig.NewContext().Build();
+            historyEnabled = fh["history"].IsEnabled;
+        });
     }
     
     public void SetBaseAddress(string baseAddress)
@@ -35,7 +42,8 @@ public class HomeController : Controller
         var model = new IndexViewModel
         {
             Conversions = conversions,
-            Conversion = null
+            Conversion = null,
+            HistoryEnabled = historyEnabled
         };
 
         return View(model);
@@ -43,17 +51,9 @@ public class HomeController : Controller
 
     public async Task<IActionResult> _History()
     {
-        var fh = await featureHubConfig.NewContext().Build();
-        var historyEnabled = fh["history"].IsEnabled;
-        
-        if (historyEnabled)
-        {
-            var result = await _httpClient.GetAsync(_httpClient.BaseAddress + "currencyconverter");
-            var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
-            return View(conversions);
-        }
-        
-        return new NotFoundResult();
+        var result = await _httpClient.GetAsync(_httpClient.BaseAddress + "currencyconverter");
+        var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
+        return View(conversions);
     }
 
     [HttpPost]
