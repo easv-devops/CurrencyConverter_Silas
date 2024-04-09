@@ -35,7 +35,7 @@ public class DatabaseService : IDatabaseService
         transaction.Commit();
     }
 
-    private MySqlConnection GetConnection()
+    public MySqlConnection GetConnection()
     {
         var connection = new MySqlConnection("Server=mariadb;Database=conversions;Uid=myuser;Pwd=mypassword;");
         connection.Open();
