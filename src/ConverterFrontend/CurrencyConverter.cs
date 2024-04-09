@@ -1,3 +1,5 @@
+using Models;
+
 namespace ConverterFrontend;
 
 public class CurrencyConverter

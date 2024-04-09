@@ -15,6 +15,16 @@ public class DatabaseService : IDatabaseService
 
     public void SaveConversion(CurrencyConversion conversion)
     {
+        if (conversion == null)
+        {
+            throw new ArgumentNullException(nameof(conversion));
+        }
+        
+        if (conversion.Value <= 0)
+        {
+            throw new ArgumentException("Value must be greater than 0", nameof(conversion));
+        }
+        
         using var connection = GetConnection();
         using var transaction = connection.BeginTransaction();
         
