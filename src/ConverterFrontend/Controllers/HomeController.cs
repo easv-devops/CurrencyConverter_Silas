@@ -20,21 +20,25 @@ public class HomeController : Controller
         _logger = logger;
         _httpClient = new HttpClient();
         _featureHubConfig = featureHubConfig;
-        SetBaseAddress("http://converter-api:8080/");
+        _httpClient.BaseAddress = new Uri("http://converter-api:8080/");
     }
-    
-    public void SetBaseAddress(string baseAddress)
+
+    private async Task<bool> GetHistoryEnabled()
     {
-        _httpClient.BaseAddress = new Uri(baseAddress);
+        var fh = await _featureHubConfig.NewContext().Build();
+        return fh["history"].IsEnabled;
+    }
+
+    private async Task<CurrencyConversion[]> GetConversions()
+    {
+        var result = await _httpClient.GetAsync(_httpClient.BaseAddress + "currencyconverter");
+        return await result.Content.ReadFromJsonAsync<CurrencyConversion[]>() ?? Array.Empty<CurrencyConversion>();
     }
 
     public async Task<IActionResult> Index()
     {
-        var fh = await _featureHubConfig.NewContext().Build();
-        _historyEnabled = fh["history"].IsEnabled;
-        
-        var result = await _httpClient.GetAsync(_httpClient.BaseAddress + "currencyconverter");
-        var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
+        _historyEnabled = await GetHistoryEnabled();
+        var conversions = await GetConversions();
         var model = new IndexViewModel
         {
             Conversions = conversions,
@@ -54,13 +58,9 @@ public class HomeController : Controller
         var content = new StringContent(JsonSerializer.Serialize(conversion), Encoding.UTF8, "application/json");
         await _httpClient.PostAsync(_httpClient.BaseAddress + "currencyconverter", content);
 
-        var conversions = await _httpClient.GetFromJsonAsync<CurrencyConversion[]>(_httpClient.BaseAddress + "currencyconverter");
-        return View("Index", new IndexViewModel { Conversions = conversions, Conversion = conversion });
-    }
-
-    public IActionResult Privacy()
-    {
-        return View();
+        _historyEnabled = await GetHistoryEnabled();
+        var conversions = await GetConversions();
+        return View("Index", new IndexViewModel { Conversions = conversions, Conversion = conversion, HistoryEnabled = _historyEnabled });
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,13 +1,12 @@
-﻿@using FeatureHubSDK
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@using Models
-@model IndexViewModel;
+﻿@model IndexViewModel;
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Currency Converter";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Currency Converter</h1>
+    <h2>Currency Converter</h2>
+    <p>Convert between different currencies</p>
+    <br/>
     <form id="convertForm" method="post" asp-controller="Home" asp-action="ConvertCurrency">
         <div class="form-row">
             <div class="form-group">
