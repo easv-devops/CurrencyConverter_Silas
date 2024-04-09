@@ -35,14 +35,3 @@ body {
 .form-row .form-group:not(:last-child) {
   margin-right: 15px;
 }
-
-.form-control {
-  appearance: menulist;
-  background-color: #fff;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23333' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.5em center;
-  background-size: 8px 10px;
-  padding-right: 1.5em;
-  border-radius: 0.25em;
-}
