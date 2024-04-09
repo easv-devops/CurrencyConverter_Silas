@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using ConverterFrontend.Models;
+using FeatureHubSDK;
 
 namespace ConverterFrontend.Controllers;
 
@@ -12,10 +13,13 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly HttpClient _httpClient;
 
+    private EdgeFeatureHubConfig featureHubConfig;
+
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
         _httpClient = new HttpClient();
+        featureHubConfig = new EdgeFeatureHubConfig("http://featurehub:8085/", "7aafd1c5-0ca6-4086-83f4-ecc8c8f44d1e/1BAw3HQvXeLd5O5dhTqaG4lCfmP1ooNgKiTNS71L");
         SetBaseAddress("http://converter-api:8080/");
     }
     
@@ -39,9 +43,17 @@ public class HomeController : Controller
 
     public async Task<IActionResult> _History()
     {
-        var result = await _httpClient.GetAsync(_httpClient.BaseAddress + "currencyconverter");
-        var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
-        return View(conversions);
+        var fh = featureHubConfig.NewContext().Build();
+        var historyEnabled = fh.Result.IsEnabled("History");
+        
+        if (historyEnabled)
+        {
+            var result = await _httpClient.GetAsync(_httpClient.BaseAddress + "currencyconverter");
+            var conversions = await result.Content.ReadFromJsonAsync<CurrencyConversion[]>();
+            return View(conversions);
+        }
+        
+        return new NotFoundResult();
     }
 
     [HttpPost]
