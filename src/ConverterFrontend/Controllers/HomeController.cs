@@ -15,10 +15,10 @@ public class HomeController : Controller
     private readonly EdgeFeatureHubConfig _featureHubConfig;
     private bool _historyEnabled;
 
-    public HomeController(ILogger<HomeController> logger, HttpClient httpClient, EdgeFeatureHubConfig featureHubConfig)
+    public HomeController(ILogger<HomeController> logger, EdgeFeatureHubConfig featureHubConfig)
     {
         _logger = logger;
-        _httpClient = httpClient;
+        _httpClient = new HttpClient();
         _featureHubConfig = featureHubConfig;
         SetBaseAddress("http://converter-api:8080/");
     }
