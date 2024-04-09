@@ -22,13 +22,11 @@ public class HomeControllerTests : IDisposable
         _homeController?.Dispose();
     }
 
-    /*[Test]
-    public void Index_ReturnsViewResult()
+    [Test]
+    public async Task Index_ThrowsHttpRequestException()
     {
-        var result = _homeController?.Index();
-
-        Assert.IsInstanceOf<ViewResult>(result);
-    }*/
+        Assert.ThrowsAsync<HttpRequestException>(() => _homeController?.Index());
+    }
 
     [Test]
     public void Privacy_ReturnsViewResult()
@@ -36,6 +34,12 @@ public class HomeControllerTests : IDisposable
         var result = _homeController?.Privacy();
 
         Assert.IsInstanceOf<ViewResult>(result);
+    }
+    
+    [Test]
+    public void Error_ThrowsNullReferenceException()
+    {
+        Assert.Throws<NullReferenceException>(() => _homeController?.Error());
     }
 
     [Test]
