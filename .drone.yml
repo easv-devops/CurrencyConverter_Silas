@@ -131,8 +131,8 @@ steps:
       - "curl --fail -X GET 'http://167.86.105.64:8080/v1/update' -H 'Authorization: Bearer mytoken'" # Must match the token defined in docker-compose.yml
       - sleep 10
     depends_on:
-      - publish api
-      - publish web
+      - release api
+      - release web
 
   - name: update database
     image: flyway/flyway
