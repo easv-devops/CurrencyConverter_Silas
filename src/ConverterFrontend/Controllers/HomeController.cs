@@ -43,8 +43,8 @@ public class HomeController : Controller
 
     public async Task<IActionResult> _History()
     {
-        var fh = featureHubConfig.NewContext().Build();
-        var historyEnabled = fh.Result.IsEnabled("History");
+        var fh = await featureHubConfig.NewContext().Build();
+        var historyEnabled = fh["history"].IsEnabled;
         
         if (historyEnabled)
         {
