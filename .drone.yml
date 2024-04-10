@@ -78,7 +78,6 @@ steps:
   - name: performance tests
     image: grafana/k6
     commands:
-      - exit 0
       - k6 run test/performance/spike.js
     depends_on:
       - update database
@@ -86,7 +85,6 @@ steps:
   - name: end-to-end tests
     image: testcafe/testcafe
     commands:
-      - exit 0
       - testcafe chromium:headless test/e2e/count-conversions.js
     depends_on:
       - update database

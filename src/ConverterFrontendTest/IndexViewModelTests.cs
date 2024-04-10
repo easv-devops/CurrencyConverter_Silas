@@ -31,7 +31,7 @@ public class IndexViewModelTests
         var conversion = new CurrencyConversion();
         _indexViewModel.Conversion = conversion;
 
-        Assert.AreEqual(conversion, _indexViewModel.Conversion);
+        Assert.That(conversion, Is.SameAs(_indexViewModel.Conversion));
     }
 
     [Test]
@@ -40,6 +40,6 @@ public class IndexViewModelTests
         var conversions = new CurrencyConversion[] { new CurrencyConversion() };
         _indexViewModel.Conversions = conversions;
 
-        Assert.AreEqual(conversions, _indexViewModel.Conversions);
+        Assert.That(conversions, Is.SameAs(_indexViewModel.Conversions));
     }
 }

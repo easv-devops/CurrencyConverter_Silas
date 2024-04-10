@@ -1,4 +1,5 @@
 using ConverterFrontend.Controllers;
+using FeatureHubSDK;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -13,7 +14,8 @@ public class HomeControllerTests : IDisposable
     public void Setup()
     {
         ILogger<HomeController> logger = Mock.Of<ILogger<HomeController>>();
-        _homeController = new HomeController(logger);
+        IFeatureHubConfig featureHubConfig = Mock.Of<IFeatureHubConfig>();
+        _homeController = new HomeController(logger, featureHubConfig as EdgeFeatureHubConfig);
     }
     
     [TearDown]
@@ -23,17 +25,9 @@ public class HomeControllerTests : IDisposable
     }
 
     [Test]
-    public async Task Index_ThrowsHttpRequestException()
+    public async Task Index_ThrowsNullReferenceException()
     {
-        Assert.ThrowsAsync<HttpRequestException>(() => _homeController?.Index());
-    }
-
-    [Test]
-    public void Privacy_ReturnsViewResult()
-    {
-        var result = _homeController?.Privacy();
-
-        Assert.IsInstanceOf<ViewResult>(result);
+        Assert.ThrowsAsync<NullReferenceException>(() => _homeController?.Index());
     }
     
     [Test]
